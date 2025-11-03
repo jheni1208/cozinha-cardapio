@@ -19,6 +19,6 @@ export function mostraMsg(msg, cor = "black", duracao = 500) {
     document.appendChild(msgDiv);
     setTimeout(() => {
         msgDiv.style.opacity = "0";
-        setTimeout(()=>msgDiv.remove(), 300);
+        setTimeout(() => msgDiv.remove(), 300);
     }, duracao);
 }
