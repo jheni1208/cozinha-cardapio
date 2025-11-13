@@ -1,4 +1,4 @@
-const API_USUARIOS = "https://api-storege-cantina-main-eight.vercel.app/"
+const API_USUARIOS = "https://cozinha-system-qow8.onrender.com"
 
 async function tratarErroResponse(res, msgPadrao) {
     const textErro = await res.text();
@@ -130,7 +130,19 @@ export async function recuperarSenha(email) {
 
 export async function cadastrarCardapio(cardapio) {
     try {
-        const res = await fetch(API_USUARIOS);
+        cardapio.usuarioId = number(localStorage.getItem("usuarioId"));
+        const res = await fetch(API_USUARIOS, {
+            method: "post",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(cardapio)
+        });
+        if (res.ok) {
+            alert("refeicao cadastrada com sucesso!");
+            listarCardapio();
+        } else {
+            alert("erro ao cadastrar cardapio")
+        }
+
         const cardapio = await res.json();
         return cardapios;
 
@@ -140,10 +152,25 @@ export async function cadastrarCardapio(cardapio) {
     }
 }
 
+
 export async function alterarCardapio(id) {
     try {
-        const res = await fetch(API_USUARIOS);
+        const res = await fetch(`API_USUARIO/${id}`);
         const cardapio = await res.json();
+        document.querySelector('#date').value = cardapio.data.split('t')[0];
+        document.querySelector('select#turnos').value = cardapio.tueno;
+        document.querySelector("input[name='refeicao']").value = cardapio.refeicao.titulo;
+        document.querySelector("texarea[name='itens']").value = cardapio.refeicao.titulo.join(",");
+        document.querySelector("input[name='bebida']").value = cardapio.refeicao.bebida.join(",");
+        
+        if (cardapio.lanche) {
+            document.querySelector('#date').value = cardapio.data.split('t')[0];
+            document.querySelector('select#turnos').value = cardapio.tueno;
+            document.querySelector("input[name='refeicao']").value = cardapio.refeicao.titulo;
+            document.querySelector("texarea[name='itens']").value = cardapio.refeicao.titulo.join(",");
+            document.querySelector("input[name='bebida']").value = cardapio.refeicao.bebida.join(",");
+        }
+
         return cardapios;
 
     } catch (error) {
@@ -163,7 +190,7 @@ export async function excluirCardapio(id) {
         console.error("erro ao excluir cardapio", error);
         alert("ocorreu um erro ao excluir cardapio");
     }
-} 
+}
 
 export async function buscarCardapio(id) {
     try {
